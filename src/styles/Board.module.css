@@ -1,0 +1,44 @@
+.board,
+.rotate_board{
+  display: grid;
+  grid-template-columns: repeat(8, 40px);
+  box-shadow: 1px 1px 5px black;
+  transition: 0.3s;
+  width: fit-content;
+}
+
+.rotate_board {
+  transform: rotateZ(180deg);
+}
+
+.square,
+.rotate_square {
+  width: 40px;
+  height: 40px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.image_piece {
+  width: 50px;
+  object-fit: contain;
+}
+
+.rotate_square {
+  transform: rotateZ(180deg);
+}
+
+@media (min-width: 768px) {
+
+  .board,
+  .rotate_board {
+    grid-template-columns: repeat(8, 60px);
+  }
+
+  .square,
+  .rotate_square {
+    width: 60px;
+    height: 60px;
+  }
+}
