@@ -4,10 +4,10 @@ import { SquareType } from './matrix';
 
 
 export default function submitMove(
-    pieces: Pieces, piece: PieceTypeWithPublicName, newSquare: SquareType
+    pieces: Pieces, piece: PieceTypeWithPublicName , newSquare: SquareType
 ): Pieces {
-
-    for(let [k,p] of Object.entries(pieces)){
+ 
+    for(let [k,p] of pieces.entries()){
         if(p.x === newSquare.x && p.y === newSquare.y){
             pieces.delete(k);
         }
