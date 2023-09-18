@@ -1,8 +1,11 @@
 import { PieceTypeWithPublicName } from '../components/Square';
+import calculatePossibleMovesforBishops from './bishopCalculation';
 import { PieceType, Pieces } from './initialPieces';
+import calculatePossibleMovesforKnights from './knightCalculation';
+import calculatePossibleMovesforRooks from './rookCalculation';
 import { PossibleSquare } from './utils';
 
-export default function possibleSquare(
+export default function possibleSquares(
     pieces: Pieces, piece: PieceTypeWithPublicName, king: PieceType
 ): PossibleSquare[] {
 
@@ -13,6 +16,21 @@ export default function possibleSquare(
     }
 
     switch(piece.info.name) {
+        case 'WR':
+        case 'BR':
+            return calculatePossibleMovesforRooks(piece.info, pieces);
+        case 'WB':
+        case 'BB':
+            return calculatePossibleMovesforBishops(piece.info, pieces);
+        case 'WQ':
+        case 'BQ':
+            return [
+                ...calculatePossibleMovesforRooks(piece.info, pieces),
+                ...calculatePossibleMovesforBishops(piece.info, pieces)
+            ];
+        case 'WKN':
+        case 'BKN':
+            return calculatePossibleMovesforKnights(piece.info, pieces);
         default: return [];
     }
 }

@@ -8,7 +8,7 @@ export type SquareType = {
 
 type Row = SquareType[];
 
-export default function getMatrix(player: string): Row[] {
+export default function getMatrix(): Row[] {
     let matrix: Row[] = [];
     let letters = "ABCDEFGH";
     for (let i = 0; i < 8; i++) {
@@ -25,12 +25,6 @@ export default function getMatrix(player: string): Row[] {
         }
         
         matrix.unshift(row);
-        /*
-        if(player === 'white') {
-            matrix.unshift(row);
-        } else {
-            matrix.push(row);
-        }*/
     }
 
     return matrix;
