@@ -135,7 +135,7 @@ const Square = (
             />}
 
             {
-                possibleSquare && 'Poss'
+                possibleSquare && <div className={styles.possible_square}></div>
             }
         </div>
     );

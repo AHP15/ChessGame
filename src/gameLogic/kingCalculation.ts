@@ -65,7 +65,7 @@ function isKingAttacked(
     return { isInCheck, positionsToFilled };
 }
 
-function isKingInCheck(king: PieceType, pieces: Pieces) {
+export function isKingInCheck(king: PieceType, pieces: Pieces) {
     let positionsToFilled: PossibleSquare[] = [];
     let isInCheck = false;
 
