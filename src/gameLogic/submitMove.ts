@@ -38,16 +38,19 @@ export default function submitMove(
     if(pieceName === "WKG" || pieceName === "BKG") {
 
         let rightCastlingXvalue = 6;
-        let leftCastlingXvalue = 2;
+        let rightCastlingYvalue = 0;
 
-        if(newSquare.x === rightCastlingXvalue) { // it is a right castling
+        let leftCastlingXvalue = 2;
+        let leftCastlingYvalue = 0;
+
+        if(newSquare.x === rightCastlingXvalue && newSquare.y === rightCastlingYvalue) { // it is a right castling
             let rightRook: any = pieceName === 'WKG' ? pieces.get('RH1') : pieces.get('RH8');
             let rightRookName = pieceName === 'WKG' ? 'RH1' : 'RH8';
 
             pieces.set(rightRookName, { ...rightRook, x: newSquare.x - 1 });
         }
 
-        if(newSquare.x === leftCastlingXvalue) { // it is a left castling
+        if(newSquare.x === leftCastlingXvalue && newSquare.y === leftCastlingYvalue) { // it is a left castling
             let leftRook: any = pieceName === 'WKG' ? pieces.get('RA1') : pieces.get('RA8');
             let leftRookName = pieceName === 'WKG' ? 'RA1' : 'RA8';
             
