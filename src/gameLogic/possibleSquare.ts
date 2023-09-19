@@ -1,8 +1,9 @@
 import { PieceTypeWithPublicName } from '../components/Square';
 import calculatePossibleMovesforBishops from './bishopCalculation';
 import { PieceType, Pieces } from './initialPieces';
+import calculatePossibleMovesforKings from './kingCalculation';
 import calculatePossibleMovesforKnights from './knightCalculation';
-import calculatePossibleMovesforPawns from './panCalculation';
+import calculatePossibleMovesforPawns from './pawnCalculation';
 import calculatePossibleMovesforRooks from './rookCalculation';
 import { PossibleSquare } from './utils';
 
@@ -35,6 +36,9 @@ export default function calculatePossibleMoves(
         case 'WKN':
         case 'BKN':
             return calculatePossibleMovesforKnights(piece.info, pieces);
+        case 'WKG':
+        case 'BKG':
+            return calculatePossibleMovesforKings(piece.info, pieces);
         default: return [];
     }
 }

@@ -41,13 +41,17 @@ export default function submitMove(
         let leftCastlingXvalue = 2;
 
         if(newSquare.x === rightCastlingXvalue) { // it is a right castling
-            let rightRook: any = pieceName === "WKG"? pieces.get('RH1') : pieces.get('RH8');
-            pieces.set(rightRook?.name, { ...rightRook, x: newSquare.x - 1 });
+            let rightRook: any = pieceName === 'WKG' ? pieces.get('RH1') : pieces.get('RH8');
+            let rightRookName = pieceName === 'WKG' ? 'RH1' : 'RH8';
+
+            pieces.set(rightRookName, { ...rightRook, x: newSquare.x - 1 });
         }
 
         if(newSquare.x === leftCastlingXvalue) { // it is a left castling
-            let leftRook: any = pieceName === "WKG"? pieces.get('RA1') : pieces.get('RA8');
-            pieces.set(leftRook?.name, { ...leftRook, x: newSquare.x + 1 });
+            let leftRook: any = pieceName === 'WKG' ? pieces.get('RA1') : pieces.get('RA8');
+            let leftRookName = pieceName === 'WKG' ? 'RA1' : 'RA8';
+            
+            pieces.set(leftRookName, { ...leftRook, x: newSquare.x + 1 });
         }
     }
 

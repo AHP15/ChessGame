@@ -6,8 +6,8 @@ export type PossibleSquare = {
     y: number,
 };
 
-type Condition = (x: number, y: number) => boolean;
-type Effect = (x: number) => number;
+export type Condition = (x: number, y: number) => boolean;
+export type Effect = (x: number) => number;
 
 
 export function traverseChessLine(
