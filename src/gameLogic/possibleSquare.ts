@@ -1,7 +1,7 @@
 import { PieceTypeWithPublicName } from '../components/Square';
 import calculatePossibleMovesforBishops from './bishopCalculation';
 import { PieceType, Pieces } from './initialPieces';
-import calculatePossibleMovesforKings from './kingCalculation';
+import calculatePossibleMovesforKings, { isKingInCheck } from './kingCalculation';
 import calculatePossibleMovesforKnights from './knightCalculation';
 import calculatePossibleMovesforPawns from './pawnCalculation';
 import calculatePossibleMovesforRooks from './rookCalculation';
@@ -14,7 +14,12 @@ export default function calculatePossibleMoves(
     // if moving this piece will cause a check to the king with the same color
     // then no possibleMoves for this piece: return []
     if(king.color === piece.info.color && king.name !== piece.info.name) {
-        // to be implemented later
+
+        const piecesCopy = new Map(pieces);
+        piecesCopy.delete(piece.publicName);
+        const { isInCheck } = isKingInCheck(king, piecesCopy);
+
+        if(isInCheck) return [];
     }
 
     switch(piece.info.name) {
