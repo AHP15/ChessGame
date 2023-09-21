@@ -1,0 +1,50 @@
+.home {
+    margin: 50px auto;
+    width: 90%;
+    max-width: 400px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.home form {
+    width: 100%;
+}
+
+.home h3 {
+    margin: 15px;
+}
+
+.home input {
+    margin: 10px;
+    outline: none;
+    padding: 5px;
+}
+
+.home button, .home input {
+    border: 2px solid blue;
+    background-color: white;
+    color: blue;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.home button:hover {
+    background-color: blue;
+    color: white;
+}
+
+.btns {
+    margin: 5px;
+    display: flex;
+}
+
+.btns button {
+    margin: 5px;
+}
+
+.submit_btn {
+    margin: 10px;
+}

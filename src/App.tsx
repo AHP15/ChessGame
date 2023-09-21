@@ -1,11 +1,13 @@
 import './App.css'
 import Board from './components/Board'
+import Home from './components/Home'
 
 function App() {
 
   return (
     <>
-      <Board player='white'/>
+      { /*<Home />*/}
+      <Board player="white" />
     </>
   )
 }
