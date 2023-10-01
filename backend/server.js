@@ -23,5 +23,5 @@ io.on('connection', (socket) => {
 
 const port = 8080;
 server.listen(port, () => {
-    console.log('Server listening on port', port);
+    console.log('Server listening on', `http://localhost:${port}`);
 });
