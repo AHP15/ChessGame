@@ -10,6 +10,6 @@ function App() {
       {/* {<Board player="white" />} */}
     </>
   )
-}
+};
 
 export default App
