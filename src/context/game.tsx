@@ -3,6 +3,7 @@ import { io } from "socket.io-client";
 
 
 interface AppState {
+    gameID: string,
     username: string,
     player: string,
     time: number,
@@ -14,6 +15,7 @@ interface ContextType {
 };
 
 const initialState: AppState = {
+    gameID: '',
     username: '',
     player: '',
     time: 0
@@ -33,11 +35,11 @@ export function useGame() {
 export default function GameProvider({ children }:{ children: React.ReactNode }) {
     const [state, setState] = useState<AppState>(initialState);
 
-    const socket = io();
+    // const socket = io();
 
-    useEffect(() => {
-        socket.on('connect_error', () => console.log('error'));
-    }, []);
+    // useEffect(() => {
+    //     socket.on('connect_error', () => console.log('error'));
+    // }, []);
 
     useEffect(() => {
         const state = JSON.parse(localStorage.getItem('state') as string);

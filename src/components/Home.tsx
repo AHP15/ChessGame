@@ -4,6 +4,7 @@ import { FormEvent, useState } from 'react';
 
 const Home = () => {
     const [state, setState] = useState({
+        gameID: '',
         username: '',
         player: '',
         time: 0,
