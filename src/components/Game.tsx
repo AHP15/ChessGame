@@ -1,27 +1,22 @@
-import { io } from 'socket.io-client';
 import { useEffect, useState } from 'react';
 
 import Board from './Board';
-import { useParams } from 'react-router-dom';
+import { useSocket } from '../context/socket';
 
 const Game = () => {
     const [pending, setPending] = useState(true);
-    const { gameId } = useParams();
-    const socket = io();
+    const socket = useSocket();
 
     useEffect(() => {
         socket.on('connect_error', () => console.log('error'));
 
         const localState = JSON.parse(localStorage.getItem('game') as string);
-        if(localState) { // state has been already set
-            socket.emit('create-game', localState);
+        if(localState) {
             setPending(false);
             return;
         }
-
-        socket.emit('get-game-info', gameId);
     
-        socket.on('game-info', (game) => {
+        socket.on('joined-game', (game) => {
             localStorage.setItem('game', JSON.stringify(game));
             setPending(false);
         });

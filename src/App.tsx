@@ -1,15 +1,27 @@
+import { useState } from 'react';
 import './App.css'
-import Board from './components/Board'
-import Home from './components/Home'
-import { useGame } from './context/game'
+import Home from './components/Home';
+import CreateGame from './components/Create';
+import JoinGame from './components/Join';
+import Game from './components/Game';
+
+export enum Display {
+  home,
+  joinGame,
+  createGame,
+  playGame
+};
 
 function App() {
-  const { state } = useGame();
+  const [display, setDisplay] = useState<Display>(Display.home);
 
   return (
-    <>
-    { state.player ? <Board player={state.player} />: <Home />}
-    </>
+    <div>
+      {display === Display.home && <Home setDisplay={setDisplay}/>}
+      {display === Display.createGame && <CreateGame setDisplay={setDisplay} />}
+      {display === Display.joinGame && <JoinGame setDisplay={setDisplay} /> }
+      {display === Display.playGame && <Game /> }
+    </div>
   )
 };
 
