@@ -1,5 +1,4 @@
 import { createContext, useCallback, useContext, useEffect, useState } from 'react';
-import { io } from "socket.io-client";
 
 
 interface AppState {
