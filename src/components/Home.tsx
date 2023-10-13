@@ -1,36 +1,34 @@
-import { useGame } from '../context/game';
 import styles from '../styles/Home.module.css';
 import { FormEvent, useState } from 'react';
+import { v4 as uuidv4 } from 'uuid';
+import { useNavigate } from 'react-router-dom';
 
 const Home = () => {
     const [state, setState] = useState({
-        gameID: '',
-        username: '',
-        player: '',
+        gameID: uuidv4(),
+        white: '',
+        black: '',
         time: 0,
     });
+    const navigate = useNavigate();
 
-    const { startGame } = useGame();
 
     const handleSubmit = (e: FormEvent) => {
        e.preventDefault();
-       startGame(state);
+       localStorage.setItem('game', JSON.stringify(state));
+       navigate(`/${state.gameID}`);
     };
 
     return (
         <div className={styles.home}>
             <h1>Chess</h1>
             <form onSubmit={handleSubmit}>
-                <input
-                   type="text"
-                   value={state.username}
-                   onChange={(e) => setState((prev) => ({ ...prev, username: e.target.value }))}
-                   placeholder="Enter your name"
-                />
                 <h3>Play As</h3>
                 <div className={styles.btns}>
-                    <button type="button" onClick={() => setState(prev => ({ ...prev, player: 'white' }))}>White</button>
-                    <button type="button" onClick={() => setState(prev => ({ ...prev, player: 'black' }))}>Black</button>
+                    <button type="button"
+                      onClick={() => setState(prev => ({ ...prev, white: uuidv4() }))}>White</button>
+                    <button type="button"
+                      onClick={() => setState(prev => ({ ...prev, black: uuidv4() }))}>Black</button>
                 </div>
                 <div className={styles.btns}>
                     <button type="button" onClick={() => setState(prev => ({ ...prev, time: 3 }))}>3 min</button>
