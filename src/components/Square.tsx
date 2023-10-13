@@ -130,7 +130,7 @@ const Square = (
         >
             {piece && <img
                 className={styles.image_piece}
-                src={`./${piece.info.image}`}
+                src={`/${piece.info.image}`}
                 alt={piece.info.name}
             />}
 
