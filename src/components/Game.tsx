@@ -13,7 +13,6 @@ const Game = () => {
         const localState = JSON.parse(localStorage.getItem('game') as string);
         if(localState) {
             setPending(false);
-            return;
         }
     
         socket.on('joined-game', (game) => {
@@ -21,14 +20,20 @@ const Game = () => {
             setPending(false);
         });
 
-        socket.on('game-not-found', () => {});
+        socket.on('game-not-found', () => {
+            alert('game not found');
+        });
     }, []);
 
     if(pending) return <h1>Pending</h1>
 
+    const game = JSON.parse(localStorage.getItem('game') as string);
+    const userId = localStorage.getItem('userId');
+    const player = game.white.id === userId ? "white": "black";
+
     return (
         <div>
-            <Board player={"white"} />
+            <Board player={player} />
         </div>
     );
 };
