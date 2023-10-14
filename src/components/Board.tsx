@@ -1,4 +1,4 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 import getMatrix from '../gameLogic/matrix';
 import initialPieces, { PieceType, Pieces } from '../gameLogic/initialPieces';
@@ -6,9 +6,11 @@ import Square, { PieceTypeWithPublicName } from './Square';
 
 import styles from '../styles/Board.module.css';
 import { PossibleSquare } from '../gameLogic/utils';
+import { useSocket } from '../context/socket';
 
 
 export interface Game {
+    id: string,
     player: string,
     pieces: Pieces,
     king: PieceType | any,
@@ -19,12 +21,14 @@ export interface Game {
 
 const Board = ({ player }: { player: string }) => {
     const [game, setGame] = useState<Game>({
+        id: JSON.parse(localStorage.getItem('game')as string).id,
         player,
         pieces: initialPieces,
         king: player === 'white' ? initialPieces.get('KGE1'): initialPieces.get('KGD8'),
         selectedPiece: null,
         possibleSquares: [],
     });
+    const socket = useSocket();
 
     const changePossibleSquares = useCallback((squares: PossibleSquare[]) => setGame(prev => ({
         ...prev,
@@ -36,12 +40,26 @@ const Board = ({ player }: { player: string }) => {
         selectedPiece: piece
     })), []);
 
-    const changePieces = useCallback((pieces: Pieces) => setGame(prev => ({
-        ...prev,
-        possibleSquares: [], //reset possibleSquares
-        selectedPiece: null,
-        pieces
-    })), []);
+    const changePieces = useCallback((pieces: Pieces) => {
+        setGame(prev => ({
+            ...prev,
+            possibleSquares: [], //reset possibleSquares
+            selectedPiece: null,
+            pieces
+        }));
+        socket.emit('send-move', { gameId: game.id, pieces: [... pieces.entries()] });
+    }, []);
+
+    useEffect(() => {
+        socket.on('move-recieved', (pieces) => {
+            console.log(pieces);
+    
+            setGame(prev => ({
+                ...prev,
+                pieces: new Map(pieces)
+            }));
+        });
+    }, []);
 
     return (
         <div className={styles[player === 'black' ? 'rotate_board' : 'board']}>

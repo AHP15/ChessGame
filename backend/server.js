@@ -25,12 +25,38 @@ io.on('connection', (socket) => {
         console.log(game);
         games.set(game.id, game);
         socket.join(game.id);
-    });;
+    });
 
-    socket.on('get-game-info', (gameID) => {
-        socket.join(gameID);
-        console.log(gameID);
-        socket.emit('game-info', games.get(gameID));
+    socket.on('join-game', (info) => {
+        console.log(info);
+        const editedGame = games.get(info.gameId);
+
+        if(!editedGame) {
+            socket.emit('game-not-found');
+            return;
+        }
+
+        socket.join(info.gameId);
+
+        if(editedGame.white.id) {
+            editedGame.black = {
+                id: info.userId,
+                username: info.username,
+            };
+        } else {
+            editedGame.white = {
+                id: info.userId,
+                username: info.username,
+            };
+        }
+
+        games.set(editedGame.id, editedGame);
+
+        io.to(info.gameId).emit('joined-game', editedGame);
+    });
+
+    socket.on('send-move', (info) => {
+        socket.broadcast.to(info.gameId).emit('move-recieved', info.pieces);
     });
 });
 

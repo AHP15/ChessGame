@@ -13,7 +13,11 @@ export enum Display {
 };
 
 function App() {
-  const [display, setDisplay] = useState<Display>(Display.home);
+  const [display, setDisplay] = useState<Display>(() => {
+    const game  = localStorage.getItem('game');
+    if(game) return Display.playGame;
+    return Display.home;
+  });
 
   return (
     <div>
