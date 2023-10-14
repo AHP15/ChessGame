@@ -5,24 +5,37 @@ import { v4 as uuidv4 } from 'uuid';
 import { useSocket } from '../context/socket';
 import { Display } from '../App';
 
+const userId = uuidv4();
+
 const CreateGame = ({ setDisplay }: { setDisplay: (display: Display) => void }) => {
 
-    const userId = uuidv4();
     const [game, setGame] = useState({
-        gameId: uuidv4(),
-        userId,
+        id: uuidv4(),
         username: '',
-        white: '',
-        black: '',
+        white: {
+            id: '',
+            username: '',
+        },
+        black: {
+            id: '',
+            username: '',
+        },
         time: 0,
     });
+    const [username, setUsername] = useState('');
 
     const socket = useSocket();
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
-        socket.emit('create-game', game);
+
+        const gameInfo = game;
+        if(gameInfo.white.id) gameInfo.white.username = username;
+        if(gameInfo.black.id) gameInfo.black.username = username;
+
+        socket.emit('create-game', gameInfo);
         localStorage.setItem('game', JSON.stringify(game));
+        localStorage.setItem('userId', userId);
         setDisplay(Display.playGame);
     }
 
@@ -34,18 +47,22 @@ const CreateGame = ({ setDisplay }: { setDisplay: (display: Display) => void }) 
             <input
                 type="text"
                 placeholder="Enter your name"
-                value={game.username}
-                onChange={(e) => setGame(prev => ({ ...prev, username: e.target.value }))}
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
             />
 
             <h3>Play As</h3>
             <div className={styles.btns}>
                 <button 
                    type="button"
-                    onClick={() => setGame(prev => ({ ...prev, white: userId}))}
+                    onClick={
+                        () => setGame(prev => ({ ...prev, white: { id: userId, username: ''}}))
+                    }
                 >White</button>
                 <button type="button"
-                    onClick={() => setGame(prev => ({ ...prev, black: userId }))}
+                    onClick={
+                        () => setGame(prev => ({ ...prev, black: { id: userId, username: ''} }))
+                    }
                 >Black</button>
             </div>
             <div className={styles.btns}>
