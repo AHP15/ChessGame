@@ -12,6 +12,7 @@ const JoinGame = ({ setDisplay }: { setDisplay: (display: Display) => void }) =>
 
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+        localStorage.setItem('userId', userId);
         socket.emit('join-game', {username, gameId, userId});
         setDisplay(Display.playGame);
     };
