@@ -6,11 +6,12 @@ import { useSocket } from '../context/socket';
 import { Display } from '../App';
 
 const userId = uuidv4();
+const gameId = uuidv4();
 
 const CreateGame = ({ setDisplay }: { setDisplay: (display: Display) => void }) => {
 
     const [game, setGame] = useState({
-        id: uuidv4(),
+        id: '',
         username: '',
         white: {
             id: '',
@@ -30,11 +31,12 @@ const CreateGame = ({ setDisplay }: { setDisplay: (display: Display) => void }) 
         e.preventDefault();
 
         const gameInfo = game;
+        gameInfo.id = gameId;
         if(gameInfo.white.id) gameInfo.white.username = username;
         if(gameInfo.black.id) gameInfo.black.username = username;
 
         socket.emit('create-game', gameInfo);
-        localStorage.setItem('game', JSON.stringify(game));
+        localStorage.setItem('game', JSON.stringify(gameInfo));
         localStorage.setItem('userId', userId);
         setDisplay(Display.playGame);
     }

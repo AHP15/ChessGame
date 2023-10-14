@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 
 import Board from './Board';
 import { useSocket } from '../context/socket';
+import Alert from './Alert';
 
 const Game = () => {
     const [pending, setPending] = useState(true);
@@ -34,6 +35,7 @@ const Game = () => {
     return (
         <div>
             <Board player={player} />
+            <Alert gameId={game.id} />
         </div>
     );
 };
