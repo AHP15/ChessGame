@@ -1,12 +1,13 @@
 import { Display } from '../App';
+import styles from '../styles/Home.module.css';
 
 const Home = ({ setDisplay }: { setDisplay: (display: Display) => void }) => {
     return (
-        <div>
-            <button type="button" onClick={() => setDisplay(Display.joinGame)}>
+        <div className={styles.home}>
+            <button className="display_btn" type="button" onClick={() => setDisplay(Display.joinGame)}>
                 Join Game
             </button>
-            <button type="button" onClick={() => setDisplay(Display.createGame)}>
+            <button className="display_btn" type="button" onClick={() => setDisplay(Display.createGame)}>
                 Create New Game
             </button>
         </div>

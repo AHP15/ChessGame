@@ -3,3 +3,25 @@
     box-sizing: border-box;
     padding: 0;
 }
+
+.display_btn {
+    background-color: transparent;
+    border: 2px solid blue;
+    border-radius: 3px;
+    padding: 5px 15px;
+    cursor: pointer;
+    margin: 5px;
+    font-size: 17px;
+    color: blue;
+    transition: 0.3s;
+}
+
+.display_btn:hover {
+    background-color: blue;
+    color: white;
+}
+
+input.display_btn:hover {
+    background-color: transparent;
+    color: blue;
+}

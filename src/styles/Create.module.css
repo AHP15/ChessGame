@@ -1,0 +1,25 @@
+.form {
+    width: 100vw;
+    height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+}
+
+.btns {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.back_btn {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+}
+
+.btn_selected {
+    color: white;
+    background-color: blue;
+}
