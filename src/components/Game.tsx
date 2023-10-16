@@ -4,6 +4,7 @@ import styles from '../styles/Game.module.css';
 import Board from './Board';
 import { useSocket } from '../context/socket';
 import Alert from './Alert';
+import PlayerInfo from './PlayerInfo';
 
 const Game = () => {
     const [pending, setPending] = useState(true);
@@ -35,7 +36,17 @@ const Game = () => {
 
     return (
         <div className={styles.game}>
+            <PlayerInfo
+               player={player === 'white' ? 'black': 'white'}
+               username={player === 'black'? game.white.username : game.black.username}
+               time={game.time}
+            />
             <Board player={player} />
+            <PlayerInfo
+               player={player === 'white' ? 'white': 'black'}
+               username={player === 'white'? game.white.username : game.black.username}
+               time={game.time}
+            />
             <Alert gameId={game.id} />
         </div>
     );
