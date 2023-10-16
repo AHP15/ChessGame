@@ -1,7 +1,16 @@
 .alert {
     position: fixed;
-    top: 15px;
-    right: 15px;
-    width: 300px;
-    border: 1px solid red;
+    top: 5px;
+    right: 5px;
+    width: 100%;
+    max-width: 400px;
+    background-color: rgba(0, 0, 255, 0.3);
+    border-radius: 10px;
+    padding: 15px;
+    color: white;
+}
+
+.alert span {
+    font-size: 14px;
+    color: blue;
 }

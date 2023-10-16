@@ -7,6 +7,10 @@
     flex-direction: column;
 }
 
+.form h1 {
+    margin-bottom: 20px;
+}
+
 .btns {
     display: flex;
     justify-content: center;

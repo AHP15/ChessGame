@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react';
+import styles from '../styles/Game.module.css';
 
 import Board from './Board';
 import { useSocket } from '../context/socket';
@@ -33,7 +34,7 @@ const Game = () => {
     const player = game.white.id === userId ? "white": "black";
 
     return (
-        <div>
+        <div className={styles.game}>
             <Board player={player} />
             <Alert gameId={game.id} />
         </div>

@@ -23,6 +23,7 @@ const JoinGame = ({ setDisplay }: { setDisplay: (display: Display) => void }) =>
             <button className={`${styles.back_btn} display_btn`} onClick={() => setDisplay(Display.home)} type="button">
                 Back to home
             </button>
+            <h1>Join Game</h1>
             <input
               type="text"
               className="display_btn"
