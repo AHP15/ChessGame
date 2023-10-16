@@ -12,7 +12,6 @@ const CreateGame = ({ setDisplay }: { setDisplay: (display: Display) => void }) 
 
     const [game, setGame] = useState({
         id: '',
-        username: '',
         white: {
             id: '',
             username: '',

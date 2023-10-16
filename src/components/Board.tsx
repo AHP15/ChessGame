@@ -52,7 +52,6 @@ const Board = ({ player }: { player: string }) => {
 
     useEffect(() => {
         socket.on('move-recieved', (pieces) => {
-            console.log(pieces);
     
             setGame(prev => ({
                 ...prev,
