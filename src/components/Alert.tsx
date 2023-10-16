@@ -2,16 +2,15 @@ import { useState } from 'react';
 import styles from '../styles/Alert.module.css';
 
 const Alert = ({gameId}: { gameId: string }) => {
-    const [alert, setAlert] = useState(
-        () => `Copy the following game id: ${gameId} with the person you want to play with `
-    );
+    const [id, setId] = useState(gameId);
 
-    if(!alert) return null;
+    if(!id) return null;
 
     return (
         <div className={styles.alert}>
-            {alert}
-            <button onClick={() => setAlert('')} type='button'>Clear</button>
+            <p>Copy the following game id with the person you want to play: </p>
+            <span>{id}</span>
+            <button className="display_btn" onClick={() => setId('')} type='button'>Clear</button>
         </div>
     );
 };
