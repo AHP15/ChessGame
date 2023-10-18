@@ -18,13 +18,15 @@ export interface Game {
     possibleSquares: PossibleSquare[]
 };
 
-const piecesData = new Map(JSON.parse(localStorage.getItem('pieces')as string)) as Pieces;
 
 const Board = ({ player }: { player: string }) => {
+    const piecesData = new Map(JSON.parse(localStorage.getItem('pieces')as string)) as Pieces;
+    const gameData = JSON.parse(localStorage.getItem('game')as string);
+    
     const [game, setGame] = useState<Game>({
-        id: JSON.parse(localStorage.getItem('game')as string).id,
+        id: gameData.id,
         player,
-        pieces: new Map(JSON.parse(localStorage.getItem('pieces')as string)) as Pieces,
+        pieces: piecesData,
         king: player === 'white' ? piecesData.get('KGE1'): piecesData.get('KGD8'),
         selectedPiece: null,
         possibleSquares: [],

@@ -3,9 +3,9 @@ import initialPieces from '../gameLogic/initialPieces';
 import styles from '../styles/Home.module.css';
 
 
-localStorage.setItem('pieces', JSON.stringify([...initialPieces.entries()]))
-
 const Home = ({ setDisplay }: { setDisplay: (display: Display) => void }) => {
+    localStorage.setItem('pieces', JSON.stringify([...initialPieces.entries()]))
+    
     return (
         <div className={styles.home}>
             <img src="/pawn.png" alt="pawn icon" />

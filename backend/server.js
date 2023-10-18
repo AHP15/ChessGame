@@ -73,7 +73,6 @@ function generateTimerForBlack(gameId) {
 io.on('connection', (socket) => {
 
     socket.on('create-game', (game) => {
-        console.log(game);
         timeForWhite = game.time;
         timeForBlack = game.time;
 
@@ -82,7 +81,6 @@ io.on('connection', (socket) => {
     });
 
     socket.on('join-game', (info) => {
-        console.log(info);
         const editedGame = games.get(info.gameId);
 
         if(!editedGame) {
@@ -119,6 +117,16 @@ io.on('connection', (socket) => {
 
     socket.on('send-move', (info) => {
         socket.broadcast.to(info.gameId).emit('move-recieved', info.pieces);
+        
+        if(timerToStart === 'white') {
+            clearInterval(timerForWhite);
+            timerToStart = 'black';
+            timerForBlack = generateTimerForBlack(info.gameId);
+        } else {
+            clearInterval(timerForBlack);
+            timerToStart = 'white';
+            timerForWhite = generateTimerForWhite(info.gameId);
+        }
     });
 
     socket.on('rejoin-game', (gameId) => {

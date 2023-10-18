@@ -47,22 +47,22 @@ function isKingAttacked(
         piece = pieceInSquare(square, pieces);
 
         if (color === WHITE_COLOR) {
+            positionsToFilled.push(square);
             if (piece && attackedBy.black.indexOf(piece.name) !== -1) {
                 isInCheck = true;
-                positionsToFilled.push(square);
             }
         }
         else {
+            positionsToFilled.push(square);
             if (piece && attackedBy.white.indexOf(piece.name) !== -1) {
                 isInCheck = true;
-                positionsToFilled.push(square);
             }
         }
 
         if (piece) break;
     }
 
-    return { isInCheck, positionsToFilled };
+    return { isInCheck, positionsToFilled: isInCheck ? positionsToFilled : [] };
 }
 
 export function isKingInCheck(king: PieceType, pieces: Pieces) {
