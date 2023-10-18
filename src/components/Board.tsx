@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import getMatrix from '../gameLogic/matrix';
-import initialPieces, { PieceType, Pieces } from '../gameLogic/initialPieces';
+import { PieceType, Pieces } from '../gameLogic/initialPieces';
 import Square, { PieceTypeWithPublicName } from './Square';
 
 import styles from '../styles/Board.module.css';
@@ -18,13 +18,14 @@ export interface Game {
     possibleSquares: PossibleSquare[]
 };
 
+const piecesData = new Map(JSON.parse(localStorage.getItem('pieces')as string)) as Pieces;
 
 const Board = ({ player }: { player: string }) => {
     const [game, setGame] = useState<Game>({
         id: JSON.parse(localStorage.getItem('game')as string).id,
         player,
-        pieces: initialPieces,
-        king: player === 'white' ? initialPieces.get('KGE1'): initialPieces.get('KGD8'),
+        pieces: new Map(JSON.parse(localStorage.getItem('pieces')as string)) as Pieces,
+        king: player === 'white' ? piecesData.get('KGE1'): piecesData.get('KGD8'),
         selectedPiece: null,
         possibleSquares: [],
     });
@@ -48,15 +49,16 @@ const Board = ({ player }: { player: string }) => {
             pieces
         }));
         socket.emit('send-move', { gameId: game.id, pieces: [... pieces.entries()] });
+        localStorage.setItem('pieces', JSON.stringify([... pieces.entries()]));
     }, []);
 
     useEffect(() => {
         socket.on('move-recieved', (pieces) => {
-    
             setGame(prev => ({
                 ...prev,
                 pieces: new Map(pieces)
             }));
+            localStorage.setItem('pieces', JSON.stringify([... pieces.entries()]));
         });
     }, []);
 
