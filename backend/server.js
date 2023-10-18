@@ -5,7 +5,7 @@ import path, { dirname } from 'path';
 import { fileURLToPath } from 'url';
 import { createServer } from 'node:http';
 
-const app = express();
+const app =  express();
 const server = createServer(app);
 const io = new Server(server);
 
@@ -21,14 +21,53 @@ const games = new Map();
 
 let timeForWhite;
 let secondsForWhite = 0;
+
 let timeForBlack;
 let secondsForBlack = 0;
 
 let timerForWhite;
 let timerForBlack;
 
+let timerToStart;
+
 function generateTimer(callback) {
     return setInterval(callback, 1000);
+}
+
+function generateTimerForWhite(gameId) {
+    return generateTimer(() => {
+        if(secondsForWhite <= 0) {
+            secondsForWhite = 59;
+            timeForWhite--;
+        } else {
+            secondsForWhite--;
+        }
+
+        let time = {
+            seconds: secondsForWhite,
+            minutes: timeForWhite,
+        };
+
+        io.to(gameId).emit('time', {time, white: true});
+    });
+}
+
+function generateTimerForBlack(gameId) {
+    return generateTimer(() => {
+        if(secondsForBlack <= 0) {
+            secondsForBlack = 59;
+            timeForBlack--;
+        } else {
+            secondsForBlack--;
+        }
+
+        let time = {
+            seconds: secondsForBlack,
+            minutes: timeForBlack,
+        };
+
+        io.to(gameId).emit('time', {time, white: false});
+    });
 }
 
 io.on('connection', (socket) => {
@@ -51,8 +90,6 @@ io.on('connection', (socket) => {
             return;
         }
 
-        let timerToStart;
-
         socket.join(info.gameId);
 
         if(editedGame.white.id) {
@@ -72,66 +109,29 @@ io.on('connection', (socket) => {
         games.set(editedGame.id, editedGame);
 
         io.to(info.gameId).emit('joined-game', editedGame);
-        /*
-        generateTimer(() => {
-            let white = timerToStart === 'white';
-            let time = {
-                seconds: white ? secondsForWhite : secondsForBlack,
-                minutes: white ? timeForWhite : timeForBlack,
-            };
-            
-            if(time.seconds <= 0) {
-                secondsForWhite = white ? 59: secondsForWhite;
-                secondsForBlack = !white? 59: secondsForBlack;
-
-                timeForWhite = white ? timeForWhite - 1: timeForWhite;
-                timeForBlack = !white ? timeForBlack - 1: timeForBlack;
-            } else {
-                secondsForWhite = white ? secondsForWhite - 1: secondsForWhite;
-                secondsForBlack = !white ? secondsForBlack - 1: secondsForBlack;
-            }
-
-            io.to(info.gameId).emit('time', {time, white});
-        });
-        */
 
         if(timerToStart === 'white') {
-            timerForWhite = generateTimer(() => {
-                if(secondsForWhite <= 0) {
-                    secondsForWhite = 59;
-                    timeForWhite--;
-                } else {
-                    secondsForWhite--;
-                }
-
-                let time = {
-                    seconds: secondsForWhite,
-                    minutes: timeForWhite,
-                };
-
-                io.to(info.gameId).emit('time', {time, white: true});
-            });
+            timerForWhite = generateTimerForWhite(info.gameId);
         } else {
-            timerForBlack = generateTimer(() => {
-                if(secondsForBlack <= 0) {
-                    secondsForBlack = 59;
-                    timeForBlack--;
-                } else {
-                    secondsForBlack--;
-                }
-
-                let time = {
-                    seconds: secondsForBlack,
-                    minutes: timeForBlack,
-                };
-
-                io.to(info.gameId).emit('time', {time, white: false});
-            });
+            timerForBlack = generateTimerForBlack(info.gameId);
         }
     });
 
     socket.on('send-move', (info) => {
         socket.broadcast.to(info.gameId).emit('move-recieved', info.pieces);
+    });
+
+    socket.on('rejoin-game', (gameId) => {
+        socket.join(gameId);
+        if(timerToStart === 'white') {
+            clearInterval(timerForWhite);
+            timerForWhite = generateTimerForWhite(gameId);
+        } else {
+            clearInterval(timeForBlack);
+            timerForBlack = generateTimerForBlack(gameId);
+        }
+
+        socket.emit('rejoined-game');
     });
 });
 

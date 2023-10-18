@@ -13,8 +13,15 @@ const Game = () => {
     useEffect(() => {
         socket.on('connect_error', () => console.log('error'));
 
-        const localState = JSON.parse(localStorage.getItem('game') as string);
-        if(localState) {
+        const game = JSON.parse(localStorage.getItem('game') as string);
+        if(game) {
+            if(game.white.id && game.black.id) {
+                socket.emit('rejoin-game', game.id);
+                socket.on('rejoined-game', () => {
+                    setPending(false)
+                });
+                return;
+            }
             setPending(false);
         }
     
