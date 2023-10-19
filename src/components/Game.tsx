@@ -8,25 +8,30 @@ import PlayerInfo from './PlayerInfo';
 
 const Game = () => {
     const [pending, setPending] = useState(true);
+    const [game, setGame] = useState(
+        JSON.parse(localStorage.getItem('game') as string)
+    );
+
     const socket = useSocket();
 
     useEffect(() => {
         socket.on('connect_error', () => console.log('error'));
 
-        const game = JSON.parse(localStorage.getItem('game') as string);
+        // const game = JSON.parse(localStorage.getItem('game') as string);
         if(game) {
             if(game.white.id && game.black.id) {
                 socket.emit('rejoin-game', game.id);
                 socket.on('rejoined-game', () => {
-                    setPending(false)
+                    setPending(false);
                 });
                 return;
             }
             setPending(false);
         }
     
-        socket.on('joined-game', (game) => {
-            localStorage.setItem('game', JSON.stringify(game));
+        socket.on('joined-game', (gameData) => {
+            localStorage.setItem('game', JSON.stringify(gameData));
+            setGame(gameData);
             setPending(false);
         });
 
@@ -37,7 +42,7 @@ const Game = () => {
 
     if(pending) return <h1>Pending</h1>
 
-    const game = JSON.parse(localStorage.getItem('game') as string);
+    //const game = JSON.parse(localStorage.getItem('game') as string);
     const userId = localStorage.getItem('userId');
     const player = game.white.id === userId ? "white": "black";
 

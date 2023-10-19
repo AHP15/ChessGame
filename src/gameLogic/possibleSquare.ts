@@ -17,8 +17,9 @@ export default function calculatePossibleMoves(
     const { isInCheck, positionsToFilled } = isKingInCheck(king, pieces);
 
     if(king.color === piece.info.color && king.name !== piece.info.name  && !isInCheck) {
-        console.log('ok1')
         const piecesCopy = new Map(pieces);
+        // Instead of the deleting the piece I should check the king at each new 
+        // possible square
         piecesCopy.delete(piece.publicName);
         const { isInCheck } = isKingInCheck(king, piecesCopy);
 
