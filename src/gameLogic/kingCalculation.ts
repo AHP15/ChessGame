@@ -36,7 +36,7 @@ function isKingAttacked(
     let color = king.color;
     let square;
     let piece: PieceType | null;
-    //positions may need to be filled if there is a check
+    //positions to be filled if there is a check
     let positionsToFilled: PossibleSquare[] = [];
     let isInCheck = false;
 
