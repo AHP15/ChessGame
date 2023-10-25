@@ -28,7 +28,8 @@ function isKingAttacked(
     attackedBy: AttackedBy
 ): {
     isInCheck: boolean,
-    positionsToFilled: PossibleSquare[]
+    positionsToFilled: PossibleSquare[],
+    attackingPosition: PossibleSquare | null
 } {
 
     let X = king.x;
@@ -61,13 +62,17 @@ function isKingAttacked(
 
         if (piece) break;
     }
-
-    return { isInCheck, positionsToFilled: isInCheck ? positionsToFilled : [] };
+    return {
+        isInCheck,
+        positionsToFilled: isInCheck ? positionsToFilled : [],
+        attackingPosition: isInCheck? {x: piece!.x, y: piece!.y}: null,
+    };
 }
 
 export function isKingInCheck(king: PieceType, pieces: Pieces) {
     let positionsToFilled: PossibleSquare[] = [];
     let isInCheck = false;
+    let attackingPosition: PossibleSquare | null = null;
 
     const attackedByQueenOrRook = {
         white: ["WQ", "WR"],//white queen or white rook
@@ -160,10 +165,11 @@ export function isKingInCheck(king: PieceType, pieces: Pieces) {
         if (test.isInCheck) {
             isInCheck = true;
             positionsToFilled = [...positionsToFilled, ...test.positionsToFilled];
+            attackingPosition = test.attackingPosition;
         }
     });
 
-    return { isInCheck, positionsToFilled };
+    return { isInCheck, positionsToFilled, attackingPosition };
 }
 
 

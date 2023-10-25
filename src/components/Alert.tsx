@@ -8,7 +8,7 @@ const Alert = ({gameId}: { gameId: string }) => {
 
     return (
         <div className={styles.alert}>
-            <p>Copy the following game id with the person you want to play: </p>
+            <p>Copy the following game id with the person you want to play with: </p>
             <span>{id}</span>
             <button className="display_btn" onClick={() => setId('')} type='button'>Clear</button>
         </div>

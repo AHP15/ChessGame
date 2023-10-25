@@ -11,19 +11,7 @@ export default function calculatePossibleMoves(
     pieces: Pieces, piece: PieceTypeWithPublicName, king: PieceType
 ): PossibleSquare[] {
 
-    // if moving this piece will cause a check to the king with the same color
-    // then no possibleMoves for this piece: return []
     let moves: PossibleSquare[] = [];
-
-    // if(king.color === piece.info.color && king.name !== piece.info.name  && !isInCheck) {
-    //     const piecesCopy = new Map(pieces);
-    //     // Instead of the deleting the piece I should check the king at each new 
-    //     // possible square
-    //     piecesCopy.delete(piece.publicName);
-    //     const { isInCheck } = isKingInCheck(king, piecesCopy);
-
-    //     if(isInCheck) return [];
-    // }
 
     switch(piece.info.name) {
         case 'WP':
@@ -57,7 +45,7 @@ export default function calculatePossibleMoves(
     }
 
     const { isInCheck, positionsToFilled } = isKingInCheck(king, pieces);
-    if(king.color === piece.info.color && king.name !== piece.info.name && isInCheck) {
+    if(isInCheck && king.name !== piece.info.name) {
         const newMoves: PossibleSquare[] = [];
         positionsToFilled.forEach(position => {
             moves.forEach(pos => {
@@ -69,22 +57,26 @@ export default function calculatePossibleMoves(
         return newMoves;
     }
 
-    //check if moving this piece into one of the possible squares found will cause a check
-    //if so remove that possible square form consideration
-    let finalMoves: PossibleSquare[] = [];
-    if(king.name === piece.info.name  && !isInCheck) {
+
+    if(king.name !== piece.info.name) {
+        let finalMoves: PossibleSquare[] = [];
         const piecesCopy = new Map(pieces);
         let pieceCopy = piece;
         moves.forEach(position => {
-            piecesCopy.set(pieceCopy.publicName, {...pieceCopy.info, x: position.x, y: position.y});
-            const { isInCheck } = isKingInCheck(king, piecesCopy);
+            piecesCopy.set(
+                pieceCopy.publicName,
+                {...pieceCopy.info, x: position.x, y: position.y}
+            );
+            const { isInCheck, attackingPosition } = isKingInCheck(king, piecesCopy);
             if(!isInCheck) {
                 finalMoves.push(position);
             }
+            if(attackingPosition) {
+                finalMoves.push(attackingPosition);
+            }
         });
-    } else { //the piece being tested is actually a king
-        finalMoves = moves;
+        return finalMoves;
     }
 
-    return finalMoves;
+    return moves;
 }
