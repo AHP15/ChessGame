@@ -61,6 +61,8 @@ const Square = (
     const possibleSquare: boolean = isPossibleSquare(game.possibleSquares, square);
 
     const handleClick = () => {
+        console.log(game.inTurn);
+        if(!game.inTurn) return;
         /*
          When the player click in a square we have 2 cases:
          a-click on an empty square

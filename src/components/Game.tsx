@@ -17,7 +17,6 @@ const Game = () => {
     useEffect(() => {
         socket.on('connect_error', () => console.log('error'));
 
-        // const game = JSON.parse(localStorage.getItem('game') as string);
         if(game) {
             if(game.white.id && game.black.id) {
                 socket.emit('rejoin-game', game.id);
@@ -42,9 +41,9 @@ const Game = () => {
 
     if(pending) return <h1>Pending</h1>
 
-    //const game = JSON.parse(localStorage.getItem('game') as string);
     const userId = localStorage.getItem('userId');
     const player = game.white.id === userId ? "white": "black";
+    localStorage.setItem('inTurn', JSON.stringify(player === 'white'));
 
     return (
         <div className={styles.game}>
@@ -53,7 +52,7 @@ const Game = () => {
                username={player === 'black'? game.white.username : game.black.username}
                time={game.time}
             />
-            <Board player={player} />
+            <Board player={player} inTurn={player === 'white'} />
             <PlayerInfo
                player={player === 'white' ? 'white': 'black'}
                username={player === 'white'? game.white.username : game.black.username}

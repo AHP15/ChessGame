@@ -15,11 +15,12 @@ export interface Game {
     pieces: Pieces,
     king: PieceType | any,
     selectedPiece: PieceTypeWithPublicName | any,
-    possibleSquares: PossibleSquare[]
+    possibleSquares: PossibleSquare[],
+    inTurn: boolean,
 };
 
 
-const Board = ({ player }: { player: string }) => {
+const Board = ({ player, inTurn }: { player: string, inTurn: boolean }) => {
     const piecesData = new Map(JSON.parse(localStorage.getItem('pieces')as string)) as Pieces;
     const gameData = JSON.parse(localStorage.getItem('game')as string);
     
@@ -30,6 +31,7 @@ const Board = ({ player }: { player: string }) => {
         king: player === 'white' ? piecesData.get('KGE1'): piecesData.get('KGD8'),
         selectedPiece: null,
         possibleSquares: [],
+        inTurn,
     });
     const socket = useSocket();
 
@@ -48,19 +50,23 @@ const Board = ({ player }: { player: string }) => {
             ...prev,
             possibleSquares: [], //reset possibleSquares
             selectedPiece: null,
-            pieces
+            pieces,
+            onTurn: !prev.inTurn,
         }));
         socket.emit('send-move', { gameId: game.id, pieces: [... pieces.entries()] });
         localStorage.setItem('pieces', JSON.stringify([... pieces.entries()]));
+        localStorage.setItem('inTurn', JSON.stringify(game.inTurn));
     }, []);
 
     useEffect(() => {
         socket.on('move-recieved', (pieces) => {
             setGame(prev => ({
                 ...prev,
-                pieces: new Map(pieces)
+                pieces: new Map(pieces),
+                onTurn: !prev.inTurn,
             }));
             localStorage.setItem('pieces', JSON.stringify([... pieces.entries()]));
+            localStorage.setItem('inTurn', JSON.stringify(game.inTurn));
         });
     }, []);
 
