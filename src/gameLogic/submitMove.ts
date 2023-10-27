@@ -4,7 +4,10 @@ import { SquareType } from './matrix';
 
 
 export default function submitMove(
-    pieces: Pieces, piece: PieceTypeWithPublicName , newSquare: SquareType
+    pieces: Pieces,
+    piece: PieceTypeWithPublicName,
+    newSquare: SquareType,
+    promoteTo: string | null = null
 ): Pieces {
  
     for(let [k,p] of pieces.entries()){
@@ -21,6 +24,20 @@ export default function submitMove(
     };
 
     let pieceName = piece.info.name;
+    switch(pieceName) {
+        case 'WR':
+        case 'BR':
+        case 'WKG':
+        case 'BKG':
+            pieceWithNewPosition.isFirstMove = false;
+            break;
+        case 'WP':
+        case 'BP':
+            pieceWithNewPosition.isFirstMove = false;
+            if(promoteTo) {
+            }
+    }
+    /*
     if(pieceName === 'WP' || pieceName === 'BP') {
         pieceWithNewPosition.isFirstMove = false;
 
@@ -32,6 +49,7 @@ export default function submitMove(
     if(pieceName === 'WR' || pieceName === 'BR' || pieceName === 'WKG' || pieceName === 'BKG') {
         pieceWithNewPosition.isFirstMove = false;
     }
+    */
     
     //See if this move is castling moving
     //If so: move the rook too
