@@ -52,7 +52,7 @@ const Game = () => {
                username={player === 'black'? game.white.username : game.black.username}
                time={game.time}
             />
-            <Board player={player} inTurn={player === 'white'} />
+            <Board player={player} />
             <PlayerInfo
                player={player === 'white' ? 'white': 'black'}
                username={player === 'white'? game.white.username : game.black.username}

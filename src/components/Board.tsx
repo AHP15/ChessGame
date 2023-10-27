@@ -16,11 +16,9 @@ export interface Game {
     king: PieceType | any,
     selectedPiece: PieceTypeWithPublicName | any,
     possibleSquares: PossibleSquare[],
-    inTurn: boolean,
 };
 
-
-const Board = ({ player, inTurn }: { player: string, inTurn: boolean }) => {
+const Board = ({ player }: { player: string }) => {
     const piecesData = new Map(JSON.parse(localStorage.getItem('pieces')as string)) as Pieces;
     const gameData = JSON.parse(localStorage.getItem('game')as string);
     
@@ -31,7 +29,6 @@ const Board = ({ player, inTurn }: { player: string, inTurn: boolean }) => {
         king: player === 'white' ? piecesData.get('KGE1'): piecesData.get('KGD8'),
         selectedPiece: null,
         possibleSquares: [],
-        inTurn,
     });
     const socket = useSocket();
 
@@ -51,22 +48,28 @@ const Board = ({ player, inTurn }: { player: string, inTurn: boolean }) => {
             possibleSquares: [], //reset possibleSquares
             selectedPiece: null,
             pieces,
-            onTurn: !prev.inTurn,
         }));
         socket.emit('send-move', { gameId: game.id, pieces: [... pieces.entries()] });
         localStorage.setItem('pieces', JSON.stringify([... pieces.entries()]));
-        localStorage.setItem('inTurn', JSON.stringify(game.inTurn));
+        localStorage.setItem(
+            'inTurn',
+            JSON.stringify(!JSON.parse(localStorage.getItem('inTurn') as string))
+        );
     }, []);
+
+    const setPoromotion = useCallback(() => {}, []);
 
     useEffect(() => {
         socket.on('move-recieved', (pieces) => {
             setGame(prev => ({
                 ...prev,
                 pieces: new Map(pieces),
-                onTurn: !prev.inTurn,
             }));
             localStorage.setItem('pieces', JSON.stringify([... pieces.entries()]));
-            localStorage.setItem('inTurn', JSON.stringify(game.inTurn));
+            localStorage.setItem(
+                'inTurn',
+                JSON.stringify(!JSON.parse(localStorage.getItem('inTurn') as string))
+            );
         });
     }, []);
 
@@ -82,9 +85,14 @@ const Board = ({ player, inTurn }: { player: string, inTurn: boolean }) => {
                         setPieces={changePieces}
                         square={square}
                         rotate={player === 'black'}
+                        alertPoromotion={setPoromotion}
                     />
                 )))
             }
+
+            <div>
+
+            </div>
         </div>
     );
 };
