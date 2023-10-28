@@ -1,0 +1,25 @@
+
+.promotion,
+.black_promotion {
+    width: 30px;
+    height: 30px;
+    background-color: burlywood;
+    box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.5);
+    margin-bottom: 5px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+
+
+.promotion img,
+.black_promotion img {
+    width: 80%;
+    object-fit: contain; 
+    cursor: pointer;
+}
+
+.black_promotion {
+    transform: rotateZ(-180deg);
+}

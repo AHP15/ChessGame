@@ -5,6 +5,7 @@
   box-shadow: 1px 1px 5px black;
   transition: 0.3s;
   width: fit-content;
+  position: relative;
 }
 
 .rotate_board {
@@ -37,6 +38,13 @@
 
 .rotate_square {
   transform: rotateZ(180deg);
+}
+
+.promotions {
+  position: absolute;
+  top: -30px;
+  right: -30px;
+  width: 30px;
 }
 
 @media (min-width: 768px) {
