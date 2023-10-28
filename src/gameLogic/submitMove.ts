@@ -7,7 +7,6 @@ export default function submitMove(
     pieces: Pieces,
     piece: PieceTypeWithPublicName,
     newSquare: SquareType,
-    promoteTo: string | null = null
 ): Pieces {
  
     for(let [k,p] of pieces.entries()){
@@ -16,7 +15,6 @@ export default function submitMove(
         }
     }
 
-    // let pieceName = piece.publicName;
     let pieceWithNewPosition = {
         ...piece.info,
         x: newSquare.x,
@@ -34,23 +32,11 @@ export default function submitMove(
         case 'WP':
         case 'BP':
             pieceWithNewPosition.isFirstMove = false;
-            if(promoteTo) {
+            if(pieceWithNewPosition.y === 7 || pieceWithNewPosition.y === 0) {
+                pieceWithNewPosition.canPromote = true;
             }
     }
-    /*
-    if(pieceName === 'WP' || pieceName === 'BP') {
-        pieceWithNewPosition.isFirstMove = false;
 
-        if(piece.info.x === 0 || piece.info.y === 7) {
-            pieceWithNewPosition.canPromote = true;
-        }
-    }
-
-    if(pieceName === 'WR' || pieceName === 'BR' || pieceName === 'WKG' || pieceName === 'BKG') {
-        pieceWithNewPosition.isFirstMove = false;
-    }
-    */
-    
     //See if this move is castling moving
     //If so: move the rook too
     if(pieceName === "WKG" || pieceName === "BKG") {
