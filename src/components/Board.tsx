@@ -1,12 +1,18 @@
 import { useCallback, useEffect, useState } from 'react';
 
 import getMatrix from '../gameLogic/matrix';
-import { PieceType, Pieces } from '../gameLogic/initialPieces';
+import {
+    PieceType,
+    Pieces,
+    promotionPiecesForWhite,
+    promotionPiecesForBlack
+} from '../gameLogic/initialPieces';
 import Square, { PieceTypeWithPublicName } from './Square';
 
 import styles from '../styles/Board.module.css';
 import { PossibleSquare } from '../gameLogic/utils';
 import { useSocket } from '../context/socket';
+import Promotion from './Promotion';
 
 
 export interface Game {
@@ -16,6 +22,8 @@ export interface Game {
     king: PieceType | any,
     selectedPiece: PieceTypeWithPublicName | any,
     possibleSquares: PossibleSquare[],
+    promotionPieces: (string | PieceType)[][],
+    showPromotions: boolean
 };
 
 const Board = ({ player }: { player: string }) => {
@@ -29,6 +37,8 @@ const Board = ({ player }: { player: string }) => {
         king: player === 'white' ? piecesData.get('KGE1'): piecesData.get('KGD8'),
         selectedPiece: null,
         possibleSquares: [],
+        promotionPieces: player === 'white'? [...promotionPiecesForWhite.entries()] : [...promotionPiecesForBlack.entries()],
+        showPromotions: false,
     });
     const socket = useSocket();
 
@@ -39,25 +49,38 @@ const Board = ({ player }: { player: string }) => {
 
     const changeSelectedPiece = useCallback((piece: PieceTypeWithPublicName | null) => setGame(prev => ({
         ...prev,
-        selectedPiece: piece
+        selectedPiece: piece,
     })), []);
 
-    const changePieces = useCallback((pieces: Pieces) => {
+    const changePieces = useCallback((pieces: Pieces, isPromostion: boolean = false) => {
+        let promotionAvailable = false;
+        [...pieces.values()].forEach((piece: PieceType) => {
+            if(player === 'white' && piece.name === 'WP' && piece.y === 7) {
+                promotionAvailable = true;
+            }
+            else if(player !== 'white' && piece.name === 'BP' && piece.y === 0) {
+                promotionAvailable = true;
+            }
+        });
+
         setGame(prev => ({
             ...prev,
             possibleSquares: [], //reset possibleSquares
             selectedPiece: null,
             pieces,
+            showPromotions: promotionAvailable
         }));
         socket.emit('send-move', { gameId: game.id, pieces: [... pieces.entries()] });
         localStorage.setItem('pieces', JSON.stringify([... pieces.entries()]));
-        localStorage.setItem(
-            'inTurn',
-            JSON.stringify(!JSON.parse(localStorage.getItem('inTurn') as string))
-        );
+
+        if(!isPromostion) {
+            localStorage.setItem(
+                'inTurn',
+                JSON.stringify(!JSON.parse(localStorage.getItem('inTurn') as string))
+            );
+        }
     }, []);
 
-    const setPoromotion = useCallback(() => {}, []);
 
     useEffect(() => {
         socket.on('move-recieved', (pieces) => {
@@ -85,14 +108,27 @@ const Board = ({ player }: { player: string }) => {
                         setPieces={changePieces}
                         square={square}
                         rotate={player === 'black'}
-                        alertPoromotion={setPoromotion}
                     />
                 )))
             }
 
-            <div>
-
-            </div>
+            {
+                game.showPromotions && (
+                    <div className={styles.promotions}>
+                        {
+                            game.promotionPieces.map(([key, piece]) => (
+                                <Promotion
+                                    key={key as KeyType}
+                                    pieces={game.pieces}
+                                    setPieces={changePieces}
+                                    publicName={key as string}
+                                    piece={piece as PieceType}
+                                />
+                            ))
+                        }
+                    </div>
+                )
+            }
         </div>
     );
 };
