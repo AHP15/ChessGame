@@ -10,16 +10,19 @@ export type PieceType = {
 
 export type Pieces = Map<string, PieceType>;
 
-export const promotionPieces: Pieces = new Map<string, PieceType>([
+export const promotionPiecesForWhite: Pieces = new Map<string, PieceType>([
     ['RH1', { name:"WR", x:0, y:0, color:"white", isFirstMove:true, image: 'white-rook.png' }],
     ['KNG1', {name:"WKN", x:0, y:0, color:"white", image: 'right-white-knight.png'}],
     ['BF1', {name:"WB", x:0, y:0, color:"white", image: 'white-bishop.png'}],
     ['QD1', {name:"WQ", x:0, y:0, color:"white", image: 'white-queen.png'}],
+]);
+
+export const promotionPiecesForBlack: Pieces = new Map<string, PieceType>([
     ['RA8', {name:"BR", x:0, y:0, color:"black", isFirstMove:true, image: 'black-rook.png'}],
     ['KNB8', {name:"BKN", x:0, y:0, color:"black", image: 'left-black-knight.png'}],
     ['BC8', {name:"BB", x:0, y:0, color:"black", image: 'black-bishop.png'}],
     ['QE8', {name:"BQ", x:0, y:0, color:"black", image: 'black-queen.png'}],
-]);
+])
 
 export default new Map<string, PieceType>([
     // white rooks
