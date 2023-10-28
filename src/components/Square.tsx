@@ -47,7 +47,6 @@ const Square = (
         setPossibleSquares,
         setSelectedPiece,
         setPieces,
-        alertPoromotion
     }:{
         game: Game,
         square: SquareType,
@@ -55,7 +54,6 @@ const Square = (
         setPossibleSquares: changePossibleSquares,
         setSelectedPiece: changeSelectedPiece,
         setPieces: changePieces,
-        alertPoromotion: () => void
     }
 ) => {
 
@@ -79,10 +77,6 @@ const Square = (
         
         let isPieceSelected = game.selectedPiece;
         let squareContainsPieceOfPlayer = piece?.info.color === game.player;
-        let promotionAvailable = (
-            (game.selectedPiece.info.name === 'WP' || game.selectedPiece.info.name === 'WP')
-            && (square.y === 0 || square.y === 7)
-        );
         //this function reset the selectedPiece and possiblesquares from
         //the game state
         const clear = () => {
@@ -96,9 +90,6 @@ const Square = (
             if (isPieceSelected && !possibleSquare) return clear();
             // a.2
             if (isPieceSelected && possibleSquare) {
-                if(promotionAvailable) {
-                    alertPoromotion();
-                }
                 let calculateNewPieces = submitMove(game.pieces, game.selectedPiece, square);
                 //I don't need to clear the selectedPiece and possibleSquares.
                 //the setPieces function will do that look at Board.js
