@@ -53,6 +53,14 @@ const Board = ({ player }: { player: string }) => {
     })), []);
 
     const changePieces = useCallback((pieces: Pieces, isPromostion: boolean = false) => {
+        if(!game.showPromotions) {
+            localStorage.setItem(
+                'inTurn',
+                JSON.stringify(!JSON.parse(localStorage.getItem('inTurn') as string))
+            );
+            socket.emit('send-move', { gameId: game.id, pieces: [... pieces.entries()] });
+        }
+
         let promotionAvailable = false;
         [...pieces.values()].forEach((piece: PieceType) => {
             if(player === 'white' && piece.name === 'WP' && piece.y === 7) {
@@ -70,15 +78,8 @@ const Board = ({ player }: { player: string }) => {
             pieces,
             showPromotions: promotionAvailable
         }));
-        socket.emit('send-move', { gameId: game.id, pieces: [... pieces.entries()] });
         localStorage.setItem('pieces', JSON.stringify([... pieces.entries()]));
-
-        if(!isPromostion) {
-            localStorage.setItem(
-                'inTurn',
-                JSON.stringify(!JSON.parse(localStorage.getItem('inTurn') as string))
-            );
-        }
+        console.log(isPromostion)
     }, []);
 
 
