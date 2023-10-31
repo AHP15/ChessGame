@@ -52,15 +52,7 @@ const Board = ({ player }: { player: string }) => {
         selectedPiece: piece,
     })), []);
 
-    const changePieces = useCallback((pieces: Pieces, isPromostion: boolean = false) => {
-        if(!game.showPromotions) {
-            localStorage.setItem(
-                'inTurn',
-                JSON.stringify(!JSON.parse(localStorage.getItem('inTurn') as string))
-            );
-            socket.emit('send-move', { gameId: game.id, pieces: [... pieces.entries()] });
-        }
-
+    const changePieces = useCallback((pieces: Pieces) => {
         let promotionAvailable = false;
         [...pieces.values()].forEach((piece: PieceType) => {
             if(player === 'white' && piece.name === 'WP' && piece.y === 7) {
@@ -79,7 +71,23 @@ const Board = ({ player }: { player: string }) => {
             showPromotions: promotionAvailable
         }));
         localStorage.setItem('pieces', JSON.stringify([... pieces.entries()]));
-        console.log(isPromostion)
+        socket.emit('send-move', { gameId: game.id, pieces: [... pieces.entries()] });
+
+        localStorage.setItem(
+            'inTurn',
+            JSON.stringify(!JSON.parse(localStorage.getItem('inTurn') as string))
+        );
+    }, []);
+
+    const promote = useCallback((pieces: Pieces) => {
+        setGame(prev => ({
+            ...prev,
+            possibleSquares: [], //reset possibleSquares
+            selectedPiece: null,
+            showPromotions: false,
+            pieces,
+        }));
+        socket.emit('promote', { gameId: game.id, pieces: [... pieces.entries()] });
     }, []);
 
 
@@ -94,6 +102,15 @@ const Board = ({ player }: { player: string }) => {
                 'inTurn',
                 JSON.stringify(!JSON.parse(localStorage.getItem('inTurn') as string))
             );
+        });
+    }, []);
+
+    useEffect(() => {
+        socket.on('promotion-recieved', (pieces) => {
+            setGame(prev => ({
+                ...prev,
+                pieces: new Map(pieces),
+            }));
         });
     }, []);
 
@@ -121,7 +138,7 @@ const Board = ({ player }: { player: string }) => {
                                 <Promotion
                                     key={key as KeyType}
                                     pieces={game.pieces}
-                                    setPieces={changePieces}
+                                    setPieces={promote}
                                     publicName={key as string}
                                     piece={piece as PieceType}
                                 />

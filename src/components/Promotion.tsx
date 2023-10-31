@@ -3,7 +3,7 @@ import { promote } from '../gameLogic/promote';
 
 import styles from '../styles/Promostion.module.css';
 
-type changePieces = (pieces: Pieces, isPromotion: boolean) => void;
+type changePieces = (pieces: Pieces) => void;
 
 const Promotion = ({
   publicName,
@@ -17,7 +17,7 @@ const Promotion = ({
   pieces: Pieces
 }) => {
   const handleClick = () => {
-    setPieces(promote(pieces, publicName, piece), true);
+    setPieces(promote(pieces, publicName, piece));
   }
   return (
     <div

@@ -129,6 +129,10 @@ io.on('connection', (socket) => {
         }
     });
 
+    socket.on('promote', (info) => {
+        socket.broadcast.to(info.gameId).emit('promotion-recieved', info.pieces);
+    });
+
     socket.on('rejoin-game', (gameId) => {
         socket.join(gameId);
         if(timerToStart === 'white') {
