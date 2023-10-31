@@ -17,7 +17,7 @@ export default function getMatrix(): Row[] {
             let squareName = letters[j];
             let value = ((i % 2 === 0 && j % 2 === 0) || (i % 2 !== 0 && j % 2 !== 0)) ? "rgb(162, 99, 16)" : "burlywood";
             row.push({
-                name: squareName + (i + 1),// addition (i+1), and then concatenation.
+                name: `${squareName}${i + 1}`,
                 x: j,
                 y: i,
                 background: value,

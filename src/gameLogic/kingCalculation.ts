@@ -41,6 +41,9 @@ function isKingAttacked(
     let positionsToFilled: PossibleSquare[] = [];
     let isInCheck = false;
 
+    // in the first eteration I should check if the king is attacked by pawns
+    let isFirstEteration = true;
+
     while (condition(X, Y)) {
         X = effectX(X);
         Y = effectY(Y);
@@ -52,15 +55,24 @@ function isKingAttacked(
             if (piece && attackedBy.black.indexOf(piece.name) !== -1) {
                 isInCheck = true;
             }
+
+            if(isFirstEteration && piece && piece.name === 'BP') {
+                isInCheck = true;
+            }
         }
         else {
             positionsToFilled.push(square);
             if (piece && attackedBy.white.indexOf(piece.name) !== -1) {
                 isInCheck = true;
             }
+
+            if(isFirstEteration && piece && piece.name === 'WP') {
+                isInCheck = true;
+            }
         }
 
         if (piece) break;
+        isFirstEteration = false;
     }
     return {
         isInCheck,
