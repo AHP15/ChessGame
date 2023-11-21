@@ -1,4 +1,4 @@
-import { FormEvent, useState } from 'react';
+import { FormEvent, useEffect, useState } from 'react';
 import styles from '../styles/Create.module.css';
 
 import { v4 as uuidv4 } from 'uuid';
@@ -23,11 +23,31 @@ const CreateGame = ({ setDisplay }: { setDisplay: (display: Display) => void }) 
         time: 0,
     });
     const [username, setUsername] = useState('');
+    const [alert, setAlert] = useState('');
 
     const socket = useSocket();
 
+    useEffect(() => {
+        setAlert('');
+    }, [username, game]);
+
     const handleSubmit = (e: FormEvent) => {
         e.preventDefault();
+
+        if(!username) {
+            setAlert('Please Enter your name');
+            return;
+        }
+
+        if(!game.black && !game.white) {
+            setAlert('Please would play as a white or black');
+            return;
+        }
+
+        if(!game.time) {
+            setAlert('Please Specify the game time');
+            return;
+        }
 
         const gameInfo = game;
         gameInfo.id = gameId;
@@ -42,6 +62,7 @@ const CreateGame = ({ setDisplay }: { setDisplay: (display: Display) => void }) 
 
     return (
         <form onSubmit={handleSubmit} className={styles.form}>
+            {alert && <p className={styles.alert}>{alert}</p>}
             <button className={`${styles.back_btn} display_btn`} onClick={() => setDisplay(Display.home)} type="button">
                 Back to home
             </button>
